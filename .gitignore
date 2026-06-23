@@ -24,3 +24,6 @@ pgdata/
 # OS-specific files
 .DS_Store
 Thumbs.db
+
+# Firebase cache
+.firebase/
