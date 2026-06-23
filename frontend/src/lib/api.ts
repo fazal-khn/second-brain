@@ -11,14 +11,29 @@ const api = axios.create({
   },
 });
 
+// Request interceptor to automatically attach JWT token if present
+api.interceptors.request.use(
+  (config) => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 // Response interceptor to handle authorization errors globally
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      // Token expired or invalid, redirect to landing if not on landing page
-      if (typeof window !== "undefined" && window.location.pathname !== "/") {
-        window.location.href = "/";
+      // Token expired or invalid, clear local storage and redirect to landing if not on landing page
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("access_token");
+        if (window.location.pathname !== "/") {
+          window.location.href = "/";
+        }
       }
     }
     return Promise.reject(error);
@@ -28,14 +43,23 @@ api.interceptors.response.use(
 export const authAPI = {
   register: async (data: any): Promise<User> => {
     const res = await api.post<User>("/auth/register", data);
+    if (res.data && (res.data as any).access_token) {
+      localStorage.setItem("access_token", (res.data as any).access_token);
+    }
     return res.data;
   },
   login: async (data: any): Promise<User> => {
     const res = await api.post<User>("/auth/login", data);
+    if (res.data && (res.data as any).access_token) {
+      localStorage.setItem("access_token", (res.data as any).access_token);
+    }
     return res.data;
   },
   logout: async (): Promise<any> => {
     const res = await api.post("/auth/logout");
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("access_token");
+    }
     return res.data;
   },
   me: async (): Promise<User> => {

@@ -34,6 +34,10 @@ def register(user_data: UserRegister, db: Session = Depends(get_db)):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
+    
+    # Generate and attach access token for immediate auth on register
+    access_token = create_access_token(data={"sub": db_user.id})
+    db_user.access_token = access_token
     return db_user
 
 @router.post("/login", response_model=UserResponse)
@@ -62,6 +66,8 @@ def login(credentials: UserLogin, response: Response, db: Session = Depends(get_
         path="/"
     )
     
+    # Attach access token to user response model
+    user.access_token = access_token
     return user
 
 @router.post("/logout")

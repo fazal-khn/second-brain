@@ -18,6 +18,7 @@ class UserResponse(BaseModel):
     full_name: str
     storage_used_mb: float
     created_at: datetime
+    access_token: Optional[str] = None
 
     class Config:
         from_attributes = True
