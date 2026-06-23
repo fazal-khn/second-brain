@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Response
 from sqlalchemy.orm import Session
 from database import get_db
 from models import User
-from schemas import UserRegister, UserLogin, UserResponse
+from schemas import UserRegister, UserLogin, UserGoogleLogin, UserResponse
 from auth import get_password_hash, verify_password, create_access_token, get_current_user
 import uuid
 
@@ -69,6 +69,45 @@ def login(credentials: UserLogin, response: Response, db: Session = Depends(get_
     # Attach access token to user response model
     user.access_token = access_token
     return user
+
+@router.post("/google", response_model=UserResponse)
+def google_login(credentials: UserGoogleLogin, response: Response, db: Session = Depends(get_db)):
+    # Check if user already exists
+    user = db.query(User).filter(User.email == credentials.email).first()
+    
+    if not user:
+        # Create a new user account with dummy hashed password for OAuth
+        hashed_password = get_password_hash(str(uuid.uuid4()) + credentials.uid)
+        user = User(
+            id=credentials.uid, # we can use firebase uid directly
+            email=credentials.email,
+            hashed_password=hashed_password,
+            full_name=credentials.full_name or "Google User",
+            storage_used_mb=0.0
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+    
+    # Create access token
+    access_token = create_access_token(data={"sub": user.id})
+    
+    # Set HTTPOnly cookie
+    response.set_cookie(
+        key="access_token",
+        value=f"Bearer {access_token}",
+        httponly=True,
+        max_age=1440 * 60,
+        expires=1440 * 60,
+        samesite="lax",
+        secure=False,  # Set to True in production (HTTPS)
+        path="/"
+    )
+    
+    # Attach access token to user response model
+    user.access_token = access_token
+    return user
+
 
 @router.post("/logout")
 def logout(response: Response):

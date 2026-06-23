@@ -62,6 +62,13 @@ export const authAPI = {
     }
     return res.data;
   },
+  googleLogin: async (data: { email: string; full_name: string; uid: string }): Promise<User> => {
+    const res = await api.post<User>("/auth/google", data);
+    if (res.data && (res.data as any).access_token) {
+      localStorage.setItem("access_token", (res.data as any).access_token);
+    }
+    return res.data;
+  },
   me: async (): Promise<User> => {
     const res = await api.get<User>("/auth/me");
     return res.data;

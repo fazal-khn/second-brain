@@ -12,6 +12,12 @@ class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
+class UserGoogleLogin(BaseModel):
+    email: EmailStr
+    full_name: str
+    uid: str
+
+
 class UserResponse(BaseModel):
     id: str
     email: EmailStr
