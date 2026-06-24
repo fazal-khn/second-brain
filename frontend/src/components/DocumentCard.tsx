@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { 
   FileText, Trash2, Download, Play, AlertCircle, 
-  Hourglass, CheckCircle2, FileCode, FileImage 
+  Hourglass, CheckCircle2 
 } from "lucide-react";
 import { Document } from "@/lib/types";
 import { documentsAPI } from "@/lib/api";
@@ -27,7 +27,7 @@ export default function DocumentCard({ doc, onDeleteSuccess }: DocumentCardProps
       case "txt":
         return <FileText className="h-8 w-8 text-emerald-500" />;
       default:
-        return <FileText className="h-8 w-8 text-neutral-400" />;
+        return <FileText className="h-8 w-8 text-text-muted" />;
     }
   };
 
@@ -35,21 +35,21 @@ export default function DocumentCard({ doc, onDeleteSuccess }: DocumentCardProps
     switch (doc.processing_status) {
       case "ready":
         return (
-          <span className="flex items-center space-x-1 px-2.5 py-1 bg-emerald-950/30 border border-emerald-900/40 text-emerald-400 text-xs font-semibold rounded-full">
+          <span className="flex items-center space-x-1 px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold rounded-full">
             <CheckCircle2 className="h-3 w-3" />
             <span>Ready</span>
           </span>
         );
       case "failed":
         return (
-          <span className="flex items-center space-x-1 px-2.5 py-1 bg-red-950/30 border border-red-900/40 text-red-400 text-xs font-semibold rounded-full">
+          <span className="flex items-center space-x-1 px-2.5 py-1 bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-xs font-semibold rounded-full">
             <AlertCircle className="h-3 w-3" />
             <span>Failed</span>
           </span>
         );
       default:
         return (
-          <span className="flex items-center space-x-1.5 px-2.5 py-1 bg-yellow-950/20 border border-yellow-900/30 text-yellow-500 text-xs font-semibold rounded-full">
+          <span className="flex items-center space-x-1.5 px-2.5 py-1 bg-yellow-500/10 border border-yellow-500/20 text-yellow-600 dark:text-yellow-500 text-xs font-semibold rounded-full">
             <Hourglass className="h-3 w-3 animate-spin" />
             <span>Processing ({doc.processing_progress}%)</span>
           </span>
@@ -101,18 +101,18 @@ export default function DocumentCard({ doc, onDeleteSuccess }: DocumentCardProps
   });
 
   return (
-    <div className="glass-card p-5 rounded-xl border border-neutral-800 flex flex-col justify-between h-[190px]">
+    <div className="glass-card p-5 rounded-xl border flex flex-col justify-between h-[190px]" style={{ borderColor: "var(--color-border)" }}>
       <div>
         <div className="flex items-start justify-between space-x-4">
           <div className="flex items-center space-x-3 truncate">
-            <div className="p-2.5 bg-neutral-900 rounded-lg border border-neutral-800 shrink-0">
+            <div className="p-2.5 bg-surface rounded-lg border shrink-0" style={{ borderColor: "var(--color-border)" }}>
               {getFileIcon()}
             </div>
             <div className="truncate">
-              <h3 className="text-sm font-bold text-white truncate" title={doc.filename}>
+              <h3 className="text-sm font-bold text-text-primary truncate" title={doc.filename}>
                 {doc.filename}
               </h3>
-              <p className="text-neutral-500 text-xs mt-0.5">
+              <p className="text-text-muted text-xs mt-0.5">
                 Uploaded {formattedDate}
               </p>
             </div>
@@ -122,30 +122,31 @@ export default function DocumentCard({ doc, onDeleteSuccess }: DocumentCardProps
 
         {/* File Stats */}
         <div className="grid grid-cols-3 gap-2 mt-4 text-center">
-          <div className="bg-neutral-950/40 p-2 rounded-lg border border-neutral-900/60">
-            <p className="text-neutral-500 text-[10px] uppercase font-semibold">Pages</p>
-            <p className="text-neutral-200 text-xs font-bold mt-0.5">{doc.page_count ?? "-"}</p>
+          <div className="bg-surface/50 p-2 rounded-lg border" style={{ borderColor: "var(--color-border)" }}>
+            <p className="text-text-muted text-[10px] uppercase font-semibold">Pages</p>
+            <p className="text-text-primary text-xs font-bold mt-0.5">{doc.page_count ?? "-"}</p>
           </div>
-          <div className="bg-neutral-950/40 p-2 rounded-lg border border-neutral-900/60">
-            <p className="text-neutral-500 text-[10px] uppercase font-semibold">Words</p>
-            <p className="text-neutral-200 text-xs font-bold mt-0.5">{doc.word_count ?? "-"}</p>
+          <div className="bg-surface/50 p-2 rounded-lg border" style={{ borderColor: "var(--color-border)" }}>
+            <p className="text-text-muted text-[10px] uppercase font-semibold">Words</p>
+            <p className="text-text-primary text-xs font-bold mt-0.5">{doc.word_count ?? "-"}</p>
           </div>
-          <div className="bg-neutral-950/40 p-2 rounded-lg border border-neutral-900/60">
-            <p className="text-neutral-500 text-[10px] uppercase font-semibold">Size</p>
-            <p className="text-neutral-200 text-xs font-bold mt-0.5">{doc.file_size_mb} MB</p>
+          <div className="bg-surface/50 p-2 rounded-lg border" style={{ borderColor: "var(--color-border)" }}>
+            <p className="text-text-muted text-[10px] uppercase font-semibold">Size</p>
+            <p className="text-text-primary text-xs font-bold mt-0.5">{doc.file_size_mb} MB</p>
           </div>
         </div>
       </div>
 
       {/* Action Footer */}
-      <div className="flex items-center justify-between border-t border-neutral-900 pt-3 mt-3">
+      <div className="flex items-center justify-between border-t pt-3 mt-3" style={{ borderColor: "var(--color-border)" }}>
         <Link 
           href={doc.processing_status === "ready" ? `/document/${doc.id}` : "#"}
           className={`flex items-center space-x-1.5 text-xs font-bold px-3 py-1.5 rounded-lg transition-all ${
             doc.processing_status === "ready"
               ? "bg-primary-violet text-white hover:opacity-90 active:scale-[0.97]"
-              : "bg-neutral-900 text-neutral-500 cursor-not-allowed"
+              : "bg-surface text-text-muted cursor-not-allowed border"
           }`}
+          style={doc.processing_status !== "ready" ? { borderColor: "var(--color-border)" } : undefined}
         >
           <Play className="h-3.5 w-3.5 fill-current" />
           <span>Analyze</span>
@@ -155,7 +156,8 @@ export default function DocumentCard({ doc, onDeleteSuccess }: DocumentCardProps
           <button
             onClick={handleDownload}
             disabled={doc.processing_status !== "ready" || downloading}
-            className="p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-900 disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+            className="p-1.5 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-hover disabled:opacity-30 disabled:hover:bg-transparent transition-all border"
+            style={{ borderColor: "transparent" }}
             title="Download Original"
           >
             <Download className="h-4 w-4" />
@@ -163,7 +165,8 @@ export default function DocumentCard({ doc, onDeleteSuccess }: DocumentCardProps
           <button
             onClick={handleDelete}
             disabled={deleting}
-            className="p-1.5 rounded-lg text-neutral-400 hover:text-red-400 hover:bg-neutral-900 disabled:opacity-30 transition-all"
+            className="p-1.5 rounded-lg text-text-secondary hover:text-red-500 hover:bg-red-500/10 disabled:opacity-30 transition-all border"
+            style={{ borderColor: "transparent" }}
             title="Delete File"
           >
             <Trash2 className="h-4 w-4" />

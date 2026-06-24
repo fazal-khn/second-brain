@@ -11,8 +11,8 @@ import SmartActions from "@/components/SmartActions";
 import { documentsAPI } from "@/lib/api";
 import { Document } from "@/lib/types";
 import { 
-  FileText, ArrowLeft, Loader2, Sparkles, 
-  MessageSquare, FileSpreadsheet, Eye, BrainCircuit, PlaySquare 
+  FileText, ArrowLeft, Loader2, 
+  MessageSquare, FileSpreadsheet, BrainCircuit, PlaySquare 
 } from "lucide-react";
 
 export default function DocumentAnalyzerClient() {
@@ -74,11 +74,11 @@ export default function DocumentAnalyzerClient() {
 
   if (loading) {
     return (
-      <div className="flex-1 bg-background flex flex-col">
+      <div className="flex-1 bg-background flex flex-col min-h-screen">
         <Navbar />
         <div className="flex-1 flex flex-col items-center justify-center space-y-4">
           <Loader2 className="h-10 w-10 text-primary-violet animate-spin" />
-          <p className="text-sm font-semibold text-neutral-400">Loading document workspace...</p>
+          <p className="text-sm font-semibold text-text-secondary">Loading document workspace...</p>
         </div>
       </div>
     );
@@ -86,17 +86,18 @@ export default function DocumentAnalyzerClient() {
 
   if (error || !document) {
     return (
-      <div className="flex-1 bg-background flex flex-col">
+      <div className="flex-1 bg-background flex flex-col min-h-screen">
         <Navbar />
         <div className="flex-1 flex flex-col items-center justify-center space-y-4 max-w-md mx-auto text-center px-4">
           <FileText className="h-10 w-10 text-red-500" />
           <div>
-            <h3 className="text-sm font-bold text-white">Ingestion Error</h3>
-            <p className="text-neutral-500 text-xs mt-1 leading-relaxed">{error || "Something went wrong"}</p>
+            <h3 className="text-sm font-bold text-text-primary">Ingestion Error</h3>
+            <p className="text-text-muted text-xs mt-1 leading-relaxed">{error || "Something went wrong"}</p>
           </div>
           <button
             onClick={() => router.push("/dashboard")}
-            className="flex items-center space-x-2 px-4 py-2 bg-neutral-900 border border-neutral-850 hover:bg-neutral-800 text-xs font-semibold rounded-lg text-white transition-all"
+            className="flex items-center space-x-2 px-4 py-2 bg-surface hover:bg-surface-hover border rounded-lg text-xs font-semibold text-text-primary transition-all"
+            style={{ borderColor: "var(--color-border)" }}
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Library</span>
@@ -114,26 +115,26 @@ export default function DocumentAnalyzerClient() {
       <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
         
         {/* Left Side: Document Viewer */}
-        <div className="flex-1 flex flex-col bg-neutral-950 p-4 border-r border-neutral-850 overflow-hidden h-[50vh] md:h-auto">
+        <div className="flex-1 flex flex-col bg-card p-4 border-r overflow-hidden h-[50vh] md:h-auto" style={{ borderColor: "var(--color-border)" }}>
           {/* Header metadata bar */}
-          <div className="flex items-center justify-between pb-3 border-b border-neutral-900 shrink-0">
+          <div className="flex items-center justify-between pb-3 border-b shrink-0" style={{ borderColor: "var(--color-border)" }}>
             <button
               onClick={() => router.push("/dashboard")}
-              className="flex items-center space-x-1.5 text-neutral-400 hover:text-white text-xs font-bold transition-all"
+              className="flex items-center space-x-1.5 text-text-secondary hover:text-text-primary text-xs font-bold transition-all"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               <span>Library</span>
             </button>
-            <span className="text-xs font-bold text-neutral-300 truncate max-w-sm" title={document.filename}>
+            <span className="text-xs font-bold text-text-primary truncate max-w-sm" title={document.filename}>
               {document.filename}
             </span>
-            <span className="text-[10px] uppercase font-bold text-neutral-500">
+            <span className="text-[10px] uppercase font-bold text-text-muted">
               {document.file_type} Mode
             </span>
           </div>
 
           {/* Viewer Container */}
-          <div className="flex-1 mt-4 relative bg-neutral-900 rounded-xl overflow-hidden border border-neutral-800 flex items-center justify-center">
+          <div className="flex-1 mt-4 relative bg-surface/50 rounded-xl overflow-hidden border flex items-center justify-center" style={{ borderColor: "var(--color-border)" }}>
             {document.file_type === "pdf" && downloadUrl ? (
               <iframe
                 key={citationPage ?? "initial"}
@@ -143,9 +144,9 @@ export default function DocumentAnalyzerClient() {
               />
             ) : (
               // TXT / DOCX Plain Text representation
-              <div className="w-full h-full overflow-y-auto p-6 text-xs text-neutral-350 font-sans leading-relaxed whitespace-pre-wrap select-text scrollbar-thin scrollbar-thumb-neutral-800">
+              <div className="w-full h-full overflow-y-auto p-6 text-xs text-text-secondary font-sans leading-relaxed whitespace-pre-wrap select-text scrollbar-thin scrollbar-thumb-neutral-800">
                 <div className="max-w-2xl mx-auto space-y-4">
-                  <h2 className="text-sm font-black text-white border-b border-neutral-800 pb-2 mb-4">
+                  <h2 className="text-sm font-black text-text-primary border-b pb-2 mb-4" style={{ borderColor: "var(--color-border)" }}>
                     Extracted Text Preview
                   </h2>
                   {document.extracted_text || "No text could be extracted."}
@@ -156,10 +157,10 @@ export default function DocumentAnalyzerClient() {
         </div>
 
         {/* Right Side: Analysis Controls */}
-        <div className="w-full md:w-[480px] lg:w-[580px] bg-card flex flex-col overflow-hidden h-[50vh] md:h-auto border-t md:border-t-0 border-neutral-850">
+        <div className="w-full md:w-[480px] lg:w-[580px] bg-card flex flex-col overflow-hidden h-[50vh] md:h-auto border-t md:border-t-0 border-l" style={{ borderColor: "var(--color-border)" }}>
           
           {/* Tabs header with underline animation */}
-          <div className="flex border-b border-neutral-850 overflow-x-auto shrink-0 bg-neutral-950/20 scrollbar-none">
+          <div className="flex border-b overflow-x-auto shrink-0 bg-surface/20 scrollbar-none" style={{ borderColor: "var(--color-border)" }}>
             {([
               { id: "summary", label: "Summary", icon: <FileText className="h-3.5 w-3.5" /> },
               { id: "chat", label: "Chat QA", icon: <MessageSquare className="h-3.5 w-3.5" /> },
@@ -172,8 +173,8 @@ export default function DocumentAnalyzerClient() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center space-x-1.5 px-5 py-4 border-b-2 text-xs font-bold transition-all whitespace-nowrap outline-none ${
                   activeTab === tab.id
-                    ? "border-primary-violet text-white bg-neutral-900/10"
-                    : "border-transparent text-neutral-500 hover:text-neutral-300"
+                    ? "border-primary-violet text-primary-violet bg-surface/50"
+                    : "border-transparent text-text-muted hover:text-text-primary"
                 }`}
               >
                 {tab.icon}

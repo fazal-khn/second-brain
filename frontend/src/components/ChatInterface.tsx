@@ -6,7 +6,7 @@ import { ChatMessage } from "@/lib/types";
 import ReactMarkdown from "react-markdown";
 import { 
   Send, Trash2, Copy, Sparkles, 
-  HelpCircle, MessageSquare, AlertCircle 
+  HelpCircle, MessageSquare 
 } from "lucide-react";
 
 interface ChatInterfaceProps {
@@ -114,19 +114,19 @@ export default function ChatInterface({ documentId, onCitationClick }: ChatInter
   };
 
   return (
-    <div className="flex flex-col h-full bg-card rounded-xl border border-neutral-800 overflow-hidden">
+    <div className="flex flex-col h-full bg-card rounded-xl border overflow-hidden" style={{ borderColor: "var(--color-border)" }}>
       
       {/* Header bar */}
-      <div className="flex items-center justify-between p-4 border-b border-neutral-800 bg-neutral-950/40 shrink-0">
+      <div className="flex items-center justify-between p-4 border-b bg-surface/40 shrink-0" style={{ borderColor: "var(--color-border)" }}>
         <div className="flex items-center space-x-2">
           <MessageSquare className="h-4 w-4 text-primary-violet" />
-          <span className="text-xs font-bold text-white">Ask AI Helper</span>
+          <span className="text-xs font-bold text-text-primary">Ask AI Helper</span>
         </div>
         
         {messages.length > 0 && (
           <button
             onClick={handleClearChat}
-            className="flex items-center text-neutral-400 hover:text-red-400 text-xs font-medium px-2 py-1 rounded hover:bg-neutral-900 transition-all"
+            className="flex items-center text-text-secondary hover:text-red-500 text-xs font-medium px-2 py-1 rounded hover:bg-surface transition-all border border-transparent"
             title="Clear Chat History"
           >
             <Trash2 className="h-3.5 w-3.5 mr-1" />
@@ -145,10 +145,10 @@ export default function ChatInterface({ documentId, onCitationClick }: ChatInter
           </div>
         ) : messages.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center p-8 space-y-4">
-            <HelpCircle className="h-10 w-10 text-neutral-500" />
+            <HelpCircle className="h-10 w-10 text-text-muted" />
             <div>
-              <h4 className="text-sm font-bold text-white">No questions asked yet</h4>
-              <p className="text-neutral-500 text-xs mt-1 max-w-xs leading-relaxed">
+              <h4 className="text-sm font-bold text-text-primary">No questions asked yet</h4>
+              <p className="text-text-muted text-xs mt-1 max-w-xs leading-relaxed">
                 Type any query below, or choose one of the suggested items to kickstart the analysis.
               </p>
             </div>
@@ -166,22 +166,23 @@ export default function ChatInterface({ documentId, onCitationClick }: ChatInter
                   className={`max-w-[85%] px-4 py-3 rounded-2xl text-xs leading-relaxed transition-all ${
                     isUser
                       ? "bg-primary-violet text-white rounded-tr-none"
-                      : "bg-neutral-900 text-neutral-200 border border-neutral-850 rounded-tl-none"
+                      : "bg-surface text-text-primary border rounded-tl-none"
                   }`}
+                  style={!isUser ? { borderColor: "var(--color-border)" } : undefined}
                 >
-                  <ReactMarkdown className="prose prose-invert max-w-none text-xs break-words whitespace-pre-wrap">
+                  <ReactMarkdown className="prose dark:prose-invert max-w-none text-xs break-words whitespace-pre-wrap">
                     {msg.content}
                   </ReactMarkdown>
 
                   {/* References / Citations */}
                   {!isUser && msg.source_chunks && msg.source_chunks.length > 0 && (
-                    <div className="border-t border-neutral-800 pt-2 mt-2 flex flex-wrap gap-1.5">
-                      <span className="text-[9px] text-neutral-500 uppercase font-bold shrink-0 self-center">Sources:</span>
+                    <div className="border-t pt-2 mt-2 flex flex-wrap gap-1.5" style={{ borderColor: "var(--color-border)" }}>
+                      <span className="text-[9px] text-text-muted uppercase font-bold shrink-0 self-center">Sources:</span>
                       {msg.source_chunks.map((chunk, index) => (
                         <button
                           key={index}
                           onClick={() => onCitationClick && onCitationClick(chunk.page)}
-                          className="flex items-center text-[10px] font-bold text-primary-blue hover:text-white px-2 py-0.5 bg-primary-blue/10 hover:bg-primary-blue/20 rounded border border-primary-blue/20 transition-all"
+                          className="flex items-center text-[10px] font-bold text-primary-blue hover:text-white px-2 py-0.5 bg-primary-blue/10 hover:bg-primary-blue rounded border border-primary-blue/20 transition-all"
                           title={chunk.text_snippet}
                         >
                           📄 Page {chunk.page}
@@ -195,7 +196,7 @@ export default function ChatInterface({ documentId, onCitationClick }: ChatInter
                 {!isUser && (
                   <button
                     onClick={() => handleCopyText(msg.content)}
-                    className="p-1 rounded text-neutral-500 hover:text-white hover:bg-neutral-900 transition-all"
+                    className="p-1 rounded text-text-muted hover:text-text-primary hover:bg-surface transition-all border border-transparent"
                     title="Copy Answer"
                   >
                     <Copy className="h-3 w-3" />
@@ -209,11 +210,11 @@ export default function ChatInterface({ documentId, onCitationClick }: ChatInter
         {/* Loading Bubble */}
         {loading && (
           <div className="flex flex-col items-start space-y-1.5 animate-pulse">
-            <div className="bg-neutral-900 text-neutral-400 border border-neutral-850 px-4 py-3 rounded-2xl rounded-tl-none text-xs flex items-center space-x-2">
-              <span className="w-1.5 h-1.5 bg-neutral-400 rounded-full animate-bounce" />
-              <span className="w-1.5 h-1.5 bg-neutral-400 rounded-full animate-bounce [animation-delay:0.2s]" />
-              <span className="w-1.5 h-1.5 bg-neutral-400 rounded-full animate-bounce [animation-delay:0.4s]" />
-              <span className="text-[10px] font-medium text-neutral-500 pl-1">AI Ingesting vector memory...</span>
+            <div className="bg-surface text-text-secondary border px-4 py-3 rounded-2xl rounded-tl-none text-xs flex items-center space-x-2" style={{ borderColor: "var(--color-border)" }}>
+              <span className="w-1.5 h-1.5 bg-text-muted rounded-full animate-bounce" />
+              <span className="w-1.5 h-1.5 bg-text-muted rounded-full animate-bounce [animation-delay:0.2s]" />
+              <span className="w-1.5 h-1.5 bg-text-muted rounded-full animate-bounce [animation-delay:0.4s]" />
+              <span className="text-[10px] font-medium text-text-muted pl-1">AI Ingesting vector memory...</span>
             </div>
           </div>
         )}
@@ -222,8 +223,8 @@ export default function ChatInterface({ documentId, onCitationClick }: ChatInter
 
       {/* Suggested Questions Grid */}
       {suggestedQuestions.length > 0 && messages.length === 0 && (
-        <div className="px-4 py-3 bg-neutral-950/20 border-t border-neutral-800 shrink-0">
-          <div className="flex items-center text-[10px] font-bold uppercase text-neutral-500 mb-2">
+        <div className="px-4 py-3 bg-surface/20 border-t shrink-0" style={{ borderColor: "var(--color-border)" }}>
+          <div className="flex items-center text-[10px] font-bold uppercase text-text-muted mb-2">
             <Sparkles className="h-3.5 w-3.5 text-primary-violet mr-1 shrink-0" />
             Suggested Questions
           </div>
@@ -232,7 +233,8 @@ export default function ChatInterface({ documentId, onCitationClick }: ChatInter
               <button
                 key={i}
                 onClick={() => handleSendMessage(q)}
-                className="text-left text-[11px] text-neutral-300 hover:text-white hover:bg-neutral-900 p-2 border border-neutral-800/80 hover:border-neutral-700 rounded-lg truncate transition-all"
+                className="text-left text-[11px] text-text-secondary hover:text-text-primary hover:bg-surface p-2 border hover:border-surface-hover rounded-lg truncate transition-all"
+                style={{ borderColor: "var(--color-border)" }}
                 title={q}
               >
                 {q}
@@ -248,7 +250,8 @@ export default function ChatInterface({ documentId, onCitationClick }: ChatInter
           e.preventDefault();
           handleSendMessage(inputValue);
         }}
-        className="p-3 border-t border-neutral-800 bg-neutral-950/40 flex items-center space-x-2 shrink-0"
+        className="p-3 border-t bg-surface/40 flex items-center space-x-2 shrink-0"
+        style={{ borderColor: "var(--color-border)" }}
       >
         <input
           type="text"
@@ -256,7 +259,8 @@ export default function ChatInterface({ documentId, onCitationClick }: ChatInter
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           disabled={loading}
-          className="flex-1 bg-neutral-900 border border-neutral-800 hover:border-neutral-700 focus:border-primary-violet rounded-lg px-4 py-2.5 outline-none text-xs text-white placeholder-neutral-500 transition-all disabled:opacity-50"
+          className="flex-1 bg-surface border hover:border-primary-violet/30 focus:border-primary-violet rounded-lg px-4 py-2.5 outline-none text-xs text-text-primary placeholder-text-muted transition-all disabled:opacity-50"
+          style={{ borderColor: "var(--color-border)" }}
         />
         <button
           type="submit"

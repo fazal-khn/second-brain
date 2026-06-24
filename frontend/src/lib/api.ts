@@ -23,19 +23,10 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response interceptor to handle authorization errors globally
+// Response interceptor to handle errors globally
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
-      // Token expired or invalid, clear local storage and redirect to landing if not on landing page
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("access_token");
-        if (window.location.pathname !== "/") {
-          window.location.href = "/";
-        }
-      }
-    }
     return Promise.reject(error);
   }
 );

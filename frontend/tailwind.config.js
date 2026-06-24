@@ -5,12 +5,18 @@ module.exports = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
-        background: "#0a0a0a",
-        card: "#141414",
-        border: "#262626",
+        background: "var(--color-bg)",
+        card: "var(--color-card)",
+        border: "var(--color-border)",
+        "text-primary": "var(--color-text-primary)",
+        "text-secondary": "var(--color-text-secondary)",
+        "text-muted": "var(--color-text-muted)",
+        surface: "var(--color-surface)",
+        "surface-hover": "var(--color-surface-hover)",
         primary: {
           violet: "#7c3aed",
           blue: "#3b82f6",

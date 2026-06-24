@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import DocumentCompare from "@/components/DocumentCompare";
 import { documentsAPI, compareAPI } from "@/lib/api";
 import { Document, Comparison } from "@/lib/types";
-import { GitCompare, Sparkles, Check, RefreshCw, AlertCircle } from "lucide-react";
+import { GitCompare, Check, RefreshCw, AlertCircle, FileText } from "lucide-react";
 
 export default function CompareDashboard() {
   const [documents, setDocuments] = useState<Document[]>([]);
@@ -75,18 +75,19 @@ export default function CompareDashboard() {
         {/* Title */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-black text-white tracking-tight flex items-center">
+            <h1 className="text-3xl font-black text-text-primary tracking-tight flex items-center">
               Compare Documents
               <GitCompare className="h-5 w-5 text-primary-violet ml-2" />
             </h1>
-            <p className="text-neutral-400 text-xs mt-1">
+            <p className="text-text-muted text-xs mt-1">
               Select 2 or 3 documents to evaluate agreements, contradictions, similarity scores, and details.
             </p>
           </div>
           {comparison && (
             <button
               onClick={handleReset}
-              className="flex items-center space-x-1.5 px-4 py-2 border border-neutral-800 hover:border-neutral-700 hover:bg-neutral-900 rounded-lg text-xs font-semibold text-white transition-all shadow"
+              className="flex items-center space-x-1.5 px-4 py-2 bg-surface hover:bg-surface-hover border rounded-lg text-xs font-semibold text-text-primary transition-all shadow"
+              style={{ borderColor: "var(--color-border)" }}
             >
               <RefreshCw className="h-3.5 w-3.5" />
               <span>Reset Compare</span>
@@ -96,23 +97,24 @@ export default function CompareDashboard() {
 
         {/* Comparison Render OR Selection Grid */}
         {comparing ? (
-          <div className="flex flex-col items-center justify-center p-20 border border-neutral-800 bg-card rounded-2xl space-y-4">
+          <div className="flex flex-col items-center justify-center p-20 border bg-card rounded-2xl space-y-4" style={{ borderColor: "var(--color-border)" }}>
             <span className="w-8 h-8 border-4 border-primary-violet/30 border-t-primary-violet rounded-full animate-spin" />
             <div className="text-center space-y-1">
-              <h3 className="text-sm font-bold text-white">Cross-Examining Knowledge Bases...</h3>
-              <p className="text-neutral-500 text-xs">GPT-4o is computing semantic vectors, fact vectors, and discrepancies</p>
+              <h3 className="text-sm font-bold text-text-primary">Cross-Examining Knowledge Bases...</h3>
+              <p className="text-text-muted text-xs">AI is computing semantic vectors, fact vectors, and discrepancies</p>
             </div>
           </div>
         ) : error ? (
-          <div className="p-8 border border-neutral-800 bg-card rounded-2xl flex flex-col items-center space-y-4 max-w-md mx-auto text-center">
+          <div className="p-8 border bg-card rounded-2xl flex flex-col items-center space-y-4 max-w-md mx-auto text-center" style={{ borderColor: "var(--color-border)" }}>
             <AlertCircle className="h-8 w-8 text-red-500" />
             <div>
-              <h3 className="text-sm font-bold text-white">Comparison Failed</h3>
-              <p className="text-neutral-550 text-xs mt-1 leading-relaxed">{error}</p>
+              <h3 className="text-sm font-bold text-text-primary">Comparison Failed</h3>
+              <p className="text-text-muted text-xs mt-1 leading-relaxed">{error}</p>
             </div>
             <button
               onClick={handleReset}
-              className="px-4 py-2 bg-neutral-900 hover:bg-neutral-800 border border-neutral-850 rounded-lg text-xs font-semibold text-white transition-all"
+              className="px-4 py-2 bg-surface hover:bg-surface-hover border rounded-lg text-xs font-semibold text-text-primary transition-all"
+              style={{ borderColor: "var(--color-border)" }}
             >
               Try Again
             </button>
@@ -123,8 +125,8 @@ export default function CompareDashboard() {
           <div className="space-y-6">
             
             {/* Selection Grid Header */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-neutral-950/40 p-4 rounded-xl border border-neutral-800">
-              <span className="text-xs text-neutral-400 font-semibold">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-surface/40 p-4 rounded-xl border" style={{ borderColor: "var(--color-border)" }}>
+              <span className="text-xs text-text-muted font-semibold">
                 {selectedIds.length === 0 
                   ? "Select documents below to begin comparison." 
                   : `Selected: ${selectedIds.length} of max 3 documents.`}
@@ -143,16 +145,16 @@ export default function CompareDashboard() {
             {loading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[1, 2].map((n) => (
-                  <div key={n} className="skeleton-shimmer h-[120px] rounded-xl border border-neutral-850" />
+                  <div key={n} className="skeleton-shimmer h-[100px] rounded-xl border" style={{ borderColor: "var(--color-border)" }} />
                 ))}
               </div>
             ) : documents.length === 0 ? (
-              <div className="border border-dashed border-neutral-800 rounded-xl p-16 flex flex-col items-center justify-center text-center">
-                <div className="p-4 bg-neutral-900 rounded-full border border-neutral-800 mb-4">
-                  <GitCompare className="h-6 w-6 text-neutral-500" />
+              <div className="border border-dashed rounded-xl p-16 flex flex-col items-center justify-center text-center" style={{ borderColor: "var(--color-border)" }}>
+                <div className="p-4 bg-surface rounded-full border mb-4" style={{ borderColor: "var(--color-border)" }}>
+                  <GitCompare className="h-6 w-6 text-text-muted" />
                 </div>
-                <h3 className="text-sm font-bold text-white">No documents available</h3>
-                <p className="text-neutral-500 text-xs mt-1 max-w-sm">
+                <h3 className="text-sm font-bold text-text-primary">No documents available</h3>
+                <p className="text-text-muted text-xs mt-1 max-w-sm">
                   You need to upload at least 2 processed documents in your Library before triggering comparison views.
                 </p>
               </div>
@@ -167,16 +169,17 @@ export default function CompareDashboard() {
                       className={`glass-card p-4 rounded-xl border cursor-pointer select-none transition-all flex items-center justify-between gap-4 h-[100px] ${
                         isChecked 
                           ? "border-primary-violet bg-primary-violet/[0.03]" 
-                          : "border-neutral-800 hover:border-neutral-700"
+                          : "hover:border-primary-violet/30"
                       }`}
+                      style={!isChecked ? { borderColor: "var(--color-border)" } : undefined}
                     >
                       <div className="flex items-center space-x-3 truncate">
-                        <div className="p-2 bg-neutral-900 rounded-lg border border-neutral-800 shrink-0">
-                          <FileText className={`h-6 w-6 ${isChecked ? "text-primary-violet" : "text-neutral-400"}`} />
+                        <div className="p-2 bg-surface rounded-lg border shrink-0" style={{ borderColor: "var(--color-border)" }}>
+                          <FileText className={`h-6 w-6 ${isChecked ? "text-primary-violet" : "text-text-muted"}`} />
                         </div>
                         <div className="truncate">
-                          <h4 className="text-xs font-bold text-white truncate" title={doc.filename}>{doc.filename}</h4>
-                          <span className="text-[10px] text-neutral-500 uppercase block font-semibold mt-1">
+                          <h4 className="text-xs font-bold text-text-primary truncate" title={doc.filename}>{doc.filename}</h4>
+                          <span className="text-[10px] text-text-muted uppercase block font-semibold mt-1">
                             {doc.page_count ?? 1} pages · {doc.file_size_mb} MB
                           </span>
                         </div>
@@ -186,8 +189,9 @@ export default function CompareDashboard() {
                       <div className={`h-5 w-5 rounded-md flex items-center justify-center shrink-0 transition-all ${
                         isChecked 
                           ? "bg-primary-violet text-white shadow shadow-primary-violet/20" 
-                          : "border border-neutral-800 bg-neutral-950"
-                      }`}>
+                          : "border bg-surface"
+                      }`}
+                      style={!isChecked ? { borderColor: "var(--color-border)" } : undefined}>
                         {isChecked && <Check className="h-3.5 w-3.5 font-black" />}
                       </div>
                     </div>
